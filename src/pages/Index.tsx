@@ -23,7 +23,7 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <Heart className="h-8 w-8 text-primary" />
             <Shield className="h-6 w-6 text-accent" />
-            <span className="text-xl font-bold text-primary">LivestockAI</span>
+            <span className="text-xl font-bold text-primary">Krishimitr-AI</span>
           </div>
           <Button onClick={() => navigate('/auth')}>
             Get Started
@@ -64,7 +64,7 @@ const Index = () => {
       <section className="px-6 py-20">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">
-            Powerful Features for Livestock Management
+            Powerful Features for cattle & bread Management
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -129,10 +129,10 @@ const Index = () => {
             <CardContent className="p-12">
               <Users className="h-16 w-16 text-primary mx-auto mb-6" />
               <h2 className="text-3xl font-bold mb-4">
-                Join the Livestock AI Revolution
+                Join the Krishimitr AI Revolution
               </h2>
               <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Thousands of farmers and veterinarians trust LivestockAI for accurate 
+                Thousands of farmers and veterinarians trust Krishimitr-AI for accurate 
                 breed identification. Start your journey today.
               </p>
               <Button size="lg" onClick={() => navigate('/auth')}>
@@ -149,10 +149,10 @@ const Index = () => {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Heart className="h-6 w-6 text-primary" />
             <Shield className="h-4 w-4 text-accent" />
-            <span className="font-semibold">LivestockAI</span>
+            <span className="font-semibold">Krishimitr-AI</span>
           </div>
           <p className="text-sm">
-            © 2024 LivestockAI. Powered by advanced AI technology for livestock identification.
+            © 2025 Krishimitr-AI. Powered by advanced AI technology for livestock identification.
           </p>
         </div>
       </footer>

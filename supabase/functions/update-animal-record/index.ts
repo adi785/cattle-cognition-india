@@ -58,8 +58,8 @@ serve(async (req) => {
     // Prepare update data
     const updateData: any = {}
     
-    if (manual_breed) updateData.manual_breed = manual_breed
-    if (final_breed) updateData.final_breed = final_breed
+    if (manual_breed) updateData.manual_breed = manual_breed.toLowerCase().replace(/\s+/g, '_')
+    if (final_breed) updateData.final_breed = final_breed.toLowerCase().replace(/\s+/g, '_')
     if (verification_status) updateData.verification_status = verification_status
     if (notes !== undefined) updateData.notes = notes
     if (location_data) updateData.location_data = location_data

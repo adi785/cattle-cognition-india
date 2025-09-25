@@ -301,7 +301,7 @@ const Profile = () => {
           <CardHeader>
             <CardTitle>Usage Statistics</CardTitle>
             <CardDescription>
-              Your activity on LivestockAI platform
+              Your activity on Krishimitr-AI platform
             </CardDescription>
           </CardHeader>
           <CardContent>

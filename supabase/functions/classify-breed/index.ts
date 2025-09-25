@@ -41,15 +41,37 @@ serve(async (req) => {
       throw new Error('Invalid image URL provided')
     }
 
-    // Fetch and validate image
-    console.log('Fetching image from URL...')
-    const imageResponse = await fetch(image_url)
-    if (!imageResponse.ok) {
-      throw new Error(`Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`)
+    // Obtain image blob - prefer Storage download for private buckets, fallback to HTTP fetch
+    let imageBlob: Blob | null = null
+    try {
+      const url = new URL(image_url)
+      const parts = url.pathname.split('/').filter(Boolean)
+      const idxPublic = parts.indexOf('public')
+      if (idxPublic >= 0 && parts[idxPublic + 1]) {
+        const bucketId = parts[idxPublic + 1]
+        const objectPath = parts.slice(idxPublic + 2).join('/')
+        console.log(`Attempting storage download from bucket "${bucketId}" path "${objectPath}"`)
+        const { data, error } = await supabase.storage.from(bucketId).download(objectPath)
+        if (error) {
+          console.warn('Storage download failed, will fallback to HTTP fetch:', error.message)
+        } else {
+          imageBlob = data
+        }
+      }
+    } catch (e) {
+      console.warn('Could not parse storage URL, will fallback to HTTP fetch:', (e as Error).message)
     }
 
-    const imageBlob = await imageResponse.blob()
-    console.log(`Image fetched successfully, size: ${imageBlob.size} bytes, type: ${imageBlob.type}`)
+    if (!imageBlob) {
+      console.log('Fetching image via HTTP...')
+      const imageResponse = await fetch(image_url, { headers: { 'Cache-Control': 'no-cache' } })
+      if (!imageResponse.ok) {
+        throw new Error(`Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`)
+      }
+      imageBlob = await imageResponse.blob()
+    }
+
+    console.log(`Image obtained successfully, size: ${imageBlob.size} bytes, type: ${imageBlob.type}`)
 
     // Skip Hugging Face API call for now and use mock predictions
     console.log('Using mock predictions instead of HF API')

@@ -84,7 +84,7 @@ const Auth = () => {
             <CircleDot className="h-12 w-12 text-primary" />
             <Shield className="h-8 w-8 text-accent" />
           </div>
-          <h1 className="text-3xl font-bold text-primary">LivestockAI</h1>
+          <h1 className="text-3xl font-bold text-primary">Krishimitr-AI</h1>
           <p className="text-muted-foreground">AI-Powered Cattle Breed Recognition</p>
         </div>
 
@@ -147,7 +147,7 @@ const Auth = () => {
               <CardHeader>
                 <CardTitle>Create Account</CardTitle>
                 <CardDescription>
-                  Join LivestockAI to start classifying cattle breeds
+                  Join Krishimitr-AI to start classifying cattle breeds
                 </CardDescription>
               </CardHeader>
               <CardContent>
