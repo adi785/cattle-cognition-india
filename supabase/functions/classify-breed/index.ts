@@ -73,28 +73,61 @@ serve(async (req) => {
 
     console.log(`Image obtained successfully, size: ${imageBlob.size} bytes, type: ${imageBlob.type}`)
 
-    // Skip Hugging Face API call for now and use mock predictions
-    console.log('Using mock predictions instead of HF API')
+    // Call Roboflow API for breed classification
+    console.log('Calling Roboflow API for breed classification')
+    
+    let predictions = [{ breed: 'unknown', confidence: 0 }]
+    let topPrediction = { breed: 'unknown', confidence: 0 }
+    
+    try {
+      // Convert blob to base64 for Roboflow API
+      const arrayBuffer = await imageBlob.arrayBuffer()
+      const base64String = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+      const dataUrl = `data:${imageBlob.type};base64,${base64String}`
+      
+      const roboflowResponse = await fetch('https://serverless.roboflow.com/innovyom-1s6fe/detect-and-classify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer Y0UeO8RHs1Vp63Y6O3m3`
+        },
+        body: JSON.stringify({
+          image: dataUrl,
+          use_cache: true
+        })
+      })
+
+      if (!roboflowResponse.ok) {
+        throw new Error(`Roboflow API error: ${roboflowResponse.status} ${roboflowResponse.statusText}`)
+      }
+
+      const roboflowResult = await roboflowResponse.json()
+      console.log('Roboflow API response:', roboflowResult)
+      
+      // Extract predictions from Roboflow response
+      if (roboflowResult.predictions && roboflowResult.predictions.length > 0) {
+        // Sort predictions by confidence
+        const sortedPredictions = roboflowResult.predictions.sort((a: any, b: any) => b.confidence - a.confidence)
+        
+        predictions = sortedPredictions.slice(0, 3).map((pred: any) => ({
+          breed: pred.class || pred.predicted_class || 'unknown',
+          confidence: parseFloat((pred.confidence || 0).toFixed(2))
+        }))
+        
+        topPrediction = predictions[0] || { breed: 'unknown', confidence: 0 }
+      } else {
+        // Fallback if no predictions
+        console.warn('No predictions returned from Roboflow API')
+        predictions = [{ breed: 'unknown', confidence: 0 }]
+        topPrediction = predictions[0]
+      }
+
+    } catch (roboflowError) {
+      console.error('Roboflow API error:', roboflowError)
+      // Keep default fallback values
+    }
     
     const processingTime = Date.now() - startTime
-
-    // Mock breed predictions based on animal type (replace with actual model results)
-    let predictions = []
-    if (animal_type === 'cattle') {
-      predictions = [
-        { breed: 'gir', confidence: 0.85 },
-        { breed: 'sahiwal', confidence: 0.12 },
-        { breed: 'jersey_cross', confidence: 0.03 }
-      ]
-    } else if (animal_type === 'buffalo') {
-      predictions = [
-        { breed: 'murrah', confidence: 0.78 },
-        { breed: 'nili_ravi', confidence: 0.15 },
-        { breed: 'surti', confidence: 0.07 }
-      ]
-    }
-
-    const topPrediction = predictions[0]
 
     // Create or update animal record
     const { data: animalRecord, error: recordError } = await supabase
@@ -154,8 +187,9 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in classify-breed function:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: error.message }),
+      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
   }
