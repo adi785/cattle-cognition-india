@@ -232,15 +232,6 @@ export type Database = {
         | "pandharpuri"
         | "kalahandi"
         | "mehsana"
-        | "bachaur"
-        | "binjharpur"
-        | "kangayem"
-        | "kankrej"
-        | "kherigarh"
-        | "ponwar"
-        | "punganur"
-        | "siri"
-        | "vechur"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -402,15 +393,6 @@ export const Constants = {
         "pandharpuri",
         "kalahandi",
         "mehsana",
-        "bachaur",
-        "binjharpur",
-        "kangayem",
-        "kankrej",
-        "kherigarh",
-        "ponwar",
-        "punganur",
-        "siri",
-        "vechur",
       ],
     },
   },

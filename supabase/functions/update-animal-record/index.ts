@@ -58,8 +58,8 @@ serve(async (req) => {
     // Prepare update data
     const updateData: any = {}
     
-    if (manual_breed) updateData.manual_breed = manual_breed.toLowerCase().replace(/\s+/g, '_')
-    if (final_breed) updateData.final_breed = final_breed.toLowerCase().replace(/\s+/g, '_')
+    if (manual_breed) updateData.manual_breed = manual_breed
+    if (final_breed) updateData.final_breed = final_breed
     if (verification_status) updateData.verification_status = verification_status
     if (notes !== undefined) updateData.notes = notes
     if (location_data) updateData.location_data = location_data
@@ -105,9 +105,8 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in update-animal-record function:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      JSON.stringify({ error: 'Internal server error', details: error.message }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
   }

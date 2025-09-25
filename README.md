@@ -1,4 +1,4 @@
-# Welcome to your InnoVyom project
+# Welcome to your Lovable project
 
 ## Project info
 
